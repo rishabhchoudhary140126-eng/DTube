@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="headerStyle.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="watch.css">
 </head>
 <body>
     <div class = "header">
         <div class = "logo" id = "header_logo">
-            <img id = "logo_img" src="imagegs/logo.png" alt="D-Tube Logo">
+            <a href="/">
+                <img id = "logo_img" src="imagegs/logo.png" alt="D-Tube Logo">
+            </a>
         </div>
         <div class = "links">
             
@@ -18,5 +22,29 @@
             <button id="profile_button" onclick="window.location.href='/profile.html'"> <img id="profile_img" src="imagegs/profile.png" alt="Profile"> </button>
         </div>    
     </div>
+
+
+
+    <div class="video_container">
+
+        <div class="left_side">
+            <video class="video_player" controls loop> <source src="/videos/video.mp4" type="video/webm" /></video>
+        </div>
+        <div class="right_side">
+            <h2>Video Title-D-Tube urwwisuguryswuyirb8eyufhbuwyfbsuiyfheri fsi7uurf sruusi</h2>
+            <h4>Description: </h4>
+            <span>This is a simple video description.</span>
+            <div class="channel_info_watch">
+                <a href="/channel.html"  >
+                    <img class="channel_logo" src="/imagegs/profile_pic/_Soft pink 💗 _moon_ with dreamy word ✨️ _.jpeg" alt="Channel Logo">
+                    <span class="channel_name_home">DTube Official</span>
+                </a>
+                <button class="subscribe_button">Subscribe</button>
+            </div>
+        </div>
+
+        
+    </div>
+
 </body>
 </html>

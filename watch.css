@@ -1,0 +1,57 @@
+
+.video_container{
+    display: flex;
+    gap: 30px;
+    padding: 20px;
+    align-items: flex-start;
+}
+
+.left_side{
+    flex: 3;
+}
+
+.right_side{
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    min-width: 250px;
+}
+
+.video_player{
+    width: 100%;
+    aspect-ratio: 16 / 9;
+
+    display: block;
+
+    background: black;
+    border-radius: 12px;
+    border: 1px solid #333;
+}
+
+.right_side h2{
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+.channel_name_home{
+    vertical-align: center;
+    display: inline-block;
+    margin-left: 10px;
+}
+.channel_info_watch{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+.subscribe_button{
+    margin-left: auto;
+    padding: 5px 10px;
+    background-color: #0e7b78;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

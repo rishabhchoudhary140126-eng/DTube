@@ -54,7 +54,7 @@ body{
     gap: 15px;
 }
 
-#upload_button{
+.upload_button{
     background-color: #0e7b78;
     color: white;
     padding: 10px 18px;
