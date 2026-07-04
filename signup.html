@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="headerStyle.css">
+    <link rel="stylesheet" href="signup.css">
 </head>
 <body>
     <div class = "header">
         <div class = "logo" id = "header_logo">
             <a href="/">
-                <img id = "logo_img" src="imagegs/logo.png" alt="D-Tube Logo">
+                <img id = "logo_img" src="uploads/imagegs/logo.png" alt="D-Tube Logo">
             </a>
         </div>
         <div class = "links">
@@ -22,5 +23,67 @@
     </div>
 
     
+    <section class="signup">
+
+        <h2>Sign Up</h2>
+
+        <label for="name">Name</label><br>
+        <input type="text" id="name"><br><br>
+
+        <label for="email">Email</label><br>
+        <input type="email" id="email"><br><br>
+
+        <label for="password">Password</label><br>
+        <input type="password" id="password"><br><br>
+
+        <label for="channelName">Channel Name</label><br>
+        <input type="text" id="channelName"><br><br>
+
+        <label for="profile_pic">Profile Picture</label><br>
+        <input type="file" id="profile_pic"><br><br>
+
+        <button id = "signupButton">Create Account</button>
+
+    </section>
+
+
+
+
+
+
+    <script>
+
+        const signupButton = document.getElementById("signupButton");
+        signupButton.addEventListener("click", async function(){
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const channelName = document.getElementById("channelName").value;
+            const profilePic = document.getElementById("profile_pic").files[0];
+
+            if(!name || !email || !password || !channelName || !profilePic) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            
+
+            const form = new FormData();
+
+            form.append("name", name);
+            form.append("email", email);
+            form.append("password", password);
+            form.append("channelName", channelName);
+            form.append("profile_pic", profilePic);
+
+            const response = await fetch("http://localhost:3000/signup", {
+                method: "POST",
+                body: form
+            });
+
+            const message = await response.text();
+            alert(message);
+        });
+    </script>
 </body>
 </html>

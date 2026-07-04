@@ -1,0 +1,17 @@
+.signup{
+    width:350px;
+    margin:40px auto;
+    border:1px solid black;
+    padding:20px;
+}
+
+.signup input{
+    width:100%;
+    padding:8px;
+}
+
+.signup button{
+    width:100%;
+    padding:10px;
+    cursor:pointer;
+}
