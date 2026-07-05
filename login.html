@@ -40,7 +40,40 @@
 
 
     <script>
-        
+        const loginButton = document.getElementById('loginButton');
+        loginButton.addEventListener('click', async () => {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            if (!email || !password) {
+                alert("Please fill in both email and password.");
+                return;
+            }
+
+            const form = new FormData();
+            form.append('email', email);
+            form.append('password', password);
+
+            const res = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                body: form
+            });
+
+            const message = await res.text();
+
+            if (res.ok) {
+                localStorage.setItem("email", email);
+                localStorage.setItem("password", password);
+                alert(message);
+                window.location.href='/home.html'
+            } else {
+                alert(message);
+}
+
+            
+            
+
+        });
     </script>
 
 </body>

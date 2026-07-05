@@ -27,38 +27,93 @@
         
 
     <form action="#" class="metadata_collector_upload">
-       <div class="upload_files">
 
-    <div class="upload_file">
+        <div class="upload_files">
 
-        <label for="videoInput" class="upload_box">
-            <span>📁 Upload Video</span>
-            <small>Select a video to upload</small>
-        </label>
+            <div class="upload_file">
 
-        <input type="file" id="videoInput" accept="video/*">
+                <label for="videoInput" class="upload_box">
+                    <span>📁 Upload Video</span>
+                    <small>Select a video to upload</small>
+                </label>
 
-    </div>
+                <input
+                    type="file"
+                    id="videoInput"
+                    accept="video/*"
+                >
 
-    <div class="upload_file">
+            </div>
 
-        <label for="thumbnailInput" class="upload_box">
-            <span>🖼 Upload Thumbnail</span>
-            <small>Select an image to upload</small>
-        </label>
+            <div class="upload_file">
 
-        <input type="file" id="thumbnailInput" accept="image/*">
+                <label for="thumbnailInput" class="upload_box">
+                    <span>🖼 Upload Thumbnail</span>
+                    <small>Select an image to upload</small>
+                </label>
 
-    </div>
+                <input
+                    type="file"
+                    id="thumbnailInput"
+                    accept="image/*"
+                >
 
-</div>
-            
-        <input type="text" class="title_upload" placeholder="Enter video title">
-        <textarea type="text" class="description_upload" placeholder="Enter video description"></textarea>
-        
-        <button type="submit" class="upload_button">Upload Video</button>
+            </div>
+
+        </div>
+
+        <input
+            type="text"
+            id = "titleInput"
+            class="title_upload"
+            placeholder="Enter video title"
+        >
+
+        <textarea
+            type="text"
+            id = "descriptionInput"
+            class="description_upload"
+            placeholder="Enter video description"
+        ></textarea>
+
+        <button
+            type="submit"
+            class="upload_button"
+            id = "upload_button"
+        >
+            Upload Video
+        </button>
+
     </form>
 
+
+    <script>
+        const uploadButton = document.getElementById('upload_button');
+        uploadButton.addEventListener('click', async () => {
+            const video = document.getElementById('videoInput').files[0];
+            const thumbnail = document.getElementById('thumbnailInput').files[0];
+            const title = document.getElementById('titleInput').value;
+            const description = document.getElementById('descriptionInput').value;
+
+            if(!video || !thumbnail || !title || !description) {
+                alert('Please fill in all fields and select files before uploading.');
+                return;
+            }
+
+            const form = new FormData();
+            form.append('video', video);
+            form.append('thumbnail', thumbnail);
+            form.append('title', title);
+            form.append('description', description);
+            form.append('email', localStorage.getItem('email'));
+            form.append('password', localStorage.getItem('password'));
+
+            const res = await fetch('http://localhost:3000/upload', {
+                method: 'POST',
+                body: form
+            });
+        })
+    </script>
     
 </body>
 </html>

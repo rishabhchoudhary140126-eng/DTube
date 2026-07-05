@@ -22,7 +22,7 @@
         </div>    
     </div>
 
-    
+
     <section class="signup">
 
         <h2>Sign Up</h2>
@@ -82,7 +82,15 @@
             });
 
             const message = await response.text();
-            alert(message);
+
+            if (response.ok) {
+                localStorage.setItem("email", email);
+                localStorage.setItem("password", password);
+                alert(message);
+                window.location.href='/home.html'
+            } else {
+                alert(message);
+}
         });
     </script>
 </body>
