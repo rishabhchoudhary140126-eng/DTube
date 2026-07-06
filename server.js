@@ -8,7 +8,7 @@ const fs = require("fs");
 const multer = require("multer");
 const path = require("path");
 
-const storage = multer.diskStorage({
+const storage_profilePic = multer.diskStorage({
 
     destination: function(req, file, cb){
         cb(null, "./data/profile_pics");
@@ -27,15 +27,16 @@ const storage = multer.diskStorage({
 
 });
 
-const upload = multer({ storage: storage });
+const upload_profilePic = multer({ storage: storage_profilePic });
 
-app.post("/signup", upload.single("profile_pic"), function(req, res){
+app.post("/signup", upload_profilePic.single("profile_pic"), function(req, res){
     
     const curentUser = {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
-        channelName: req.body.channelName
+        channelName: req.body.channelName,
+        uploadCount: 1
     }
     
 
@@ -60,8 +61,8 @@ app.post("/signup", upload.single("profile_pic"), function(req, res){
 
 function giveCurrentUser(req, res, next){
     let currentUser = null;
-    const email = req.body.email;
-    const password = req.body.password;
+    const email = req.headers.email;
+    const password = req.headers.password;
     console.log(email, "\n", password);
     const users = JSON.parse(fs.readFileSync("./data/users.json", "utf8"));
 
@@ -78,13 +79,59 @@ function giveCurrentUser(req, res, next){
 }
 
 
-app.post("/login", upload.none(), giveCurrentUser, function(req, res){
+app.post("/login", giveCurrentUser, function(req, res){
     res.send("Login successful");
 });
 
 
-app.post("/upload", upload.fields([{ name : "video", maxCount: 1 }, { name : "thumbnail", maxCount: 1 }]),giveCurrentUser,  function(req, res){
-     
+
+
+const storage_upload = multer.diskStorage({
+    destination: function(req, file, cb){
+        const user = req.currentUser.email.replaceAll(".", "_").replaceAll("@", "_");
+        fs.mkdirSync('./uploads/' + user, { recursive: true });
+        cb(null, "./uploads/" + user);
+    },
+    filename: function(req, file, cb){
+
+        const fileName =
+            req.currentUser.uploadCount
+            + path.extname(file.originalname);
+
+        cb(null, fileName);
+    }
+});
+
+const upload_upload = multer({ storage: storage_upload });
+
+app.post("/upload", giveCurrentUser, upload_upload.fields([{ name : "video", maxCount: 1 }, { name : "thumbnail", maxCount: 1 }]), function(req, res){
+     const video = req.files.video[0];
+     const thumbnail = req.files.thumbnail[0];
+     const title = req.body.title;
+     const description = req.body.description;
+
+     const metaData = {
+        title: title,
+        description : description
+     }
+
+    const user = req.currentUser.email.replaceAll(".", "_").replaceAll("@", "_");
+    fs.writeFileSync("./uploads/" + user + "/" + req.currentUser.uploadCount + ".json", JSON.stringify(metaData, null, 2));
+    
+    const users = JSON.parse(fs.readFileSync("./data/users.json", "utf8"));
+    let currentIndex = 0;
+    for(let i=0; i<users.length; i++){
+        if(users[i].email === req.currentUser.email){
+            currentIndex = i;
+            break;
+        }
+    }
+
+    users[currentIndex].uploadCount++;
+    fs.writeFileSync("./data/users.json", JSON.stringify(users, null, 2));
+
+
+    res.send("Upload successful");
 });
 
 

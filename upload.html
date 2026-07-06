@@ -79,7 +79,7 @@
         <button
             type="submit"
             class="upload_button"
-            id = "upload_button"
+            id = "upload_video_button"
         >
             Upload Video
         </button>
@@ -88,7 +88,7 @@
 
 
     <script>
-        const uploadButton = document.getElementById('upload_button');
+        const uploadButton = document.getElementById('upload_video_button');
         uploadButton.addEventListener('click', async () => {
             const video = document.getElementById('videoInput').files[0];
             const thumbnail = document.getElementById('thumbnailInput').files[0];
@@ -105,13 +105,23 @@
             form.append('thumbnail', thumbnail);
             form.append('title', title);
             form.append('description', description);
-            form.append('email', localStorage.getItem('email'));
-            form.append('password', localStorage.getItem('password'));
+
 
             const res = await fetch('http://localhost:3000/upload', {
                 method: 'POST',
+                headers: {
+                    'email': localStorage.getItem('email'),
+                    'password': localStorage.getItem('password')
+                },
                 body: form
             });
+
+            const message = await res.text();
+            if (res.ok) {
+                alert('Upload successful!');
+            } else {
+                alert('Upload failed: ' + message);
+            }
         })
     </script>
     
