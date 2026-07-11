@@ -63,7 +63,6 @@ function giveCurrentUser(req, res, next){
     let currentUser = null;
     const email = req.headers.email;
     const password = req.headers.password;
-    console.log(email, "\n", password);
     const users = JSON.parse(fs.readFileSync("./data/users.json", "utf8"));
 
     for(let i=0; i<users.length; i++){
@@ -72,10 +71,10 @@ function giveCurrentUser(req, res, next){
                 req.currentUser = users[i];
                 return next();
             }
-            else return res.send("Invalid password");
+            else return res.send("Invalid password, Please login again");
         }
     }
-    return res.send("User not found");
+    return res.send("User not found, Please Signup");
 }
 
 
@@ -135,4 +134,38 @@ app.post("/upload", giveCurrentUser, upload_upload.fields([{ name : "video", max
 });
 
 
+app.get("/videos", giveCurrentUser, function(req, res){
+    const users = JSON.parse(fs.readFileSync("./data/users.json", "utf8"));
+    const videos = [];
+    let currentIndex = 0;
+    for(let i=0; i<users.length; i++){
+        for(let j=1; j<users[i].uploadCount; j++){
+            let email = users[i].email.replaceAll(".", "_").replaceAll("@", "_");
+            let metadata = JSON.parse(fs.readFileSync("./uploads/" + email + "/" + j + ".json", "utf8"));
+            videos.push({
+                title: metadata.title,
+                description: metadata.description,
+                channelName: users[i].channelName,
+                videoPath: "/uploads/" + email + "/" + j + ".mp4",
+                thumbnailPath: "/uploads/" + email + "/" + j + ".jpg",
+                channelLogoPath: "/data/profile_pics/" + email + ".jpg"
+            });
+        }
+    }
+    res.send(videos);
+});
+
+app.get("/video", giveCurrentUser, function(req, res){
+    const path = req.query.videoPath;
+    console.log(path);
+    const metadataPath = path.replaceAll(".mp4", ".json");
+    const metadata = JSON.parse(fs.readFileSync("." + metadataPath, "utf8"));
+    const ans = {
+        path: path,
+        title: metadata.title,
+        description: metadata.description
+    }
+    console.log(ans);
+    res.send(ans);
+});
 app.listen(3000);

@@ -5,5 +5,19 @@
     "password": "feqw",
     "channelName": "fewq",
     "uploadCount": 2
+  },
+  {
+    "name": "Techy Guruji",
+    "email": "techyguruji@gmail.com",
+    "password": "techyguruji@gmail.com",
+    "channelName": "Techy. Guruji",
+    "uploadCount": 3
+  },
+  {
+    "name": "krish",
+    "email": "krish@gmail.com",
+    "password": "krish@123",
+    "channelName": "Kriest",
+    "uploadCount": 2
   }
 ]

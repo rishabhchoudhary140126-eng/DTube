@@ -28,15 +28,15 @@
     <div class="video_container">
 
         <div class="left_side">
-            <video class="video_player" controls loop> <source src="uploads//videos/video.mp4" type="video/webm" /></video>
+            <video class="video_player" controls loop> <source id = "videoPath" src="uploads/videos/video.mp4" type="video/webm" /></video>
         </div>
         <div class="right_side">
-            <h2>Video Title-D-Tube urwwisuguryswuyirb8eyufhbuwyfbsuiyfheri fsi7uurf sruusi</h2>
+            <h2 id = "videoTitle">Video Title-D-Tube urwwisuguryswuyirb8eyufhbuwyfbsuiyfheri fsi7uurf sruusi</h2>
             <h4>Description: </h4>
-            <span>This is a simple video description.</span>
+            <span id="videoDescription">This is a simple video description.</span>
             <div class="channel_info_watch">
                 <a href="/channel.html"  >
-                    <img class="channel_logo" src="uploads//imagegs/profile_pic/_Soft pink 💗 _moon_ with dreamy word ✨️ _.jpeg" alt="Channel Logo">
+                    <img class="channel_logo" src="uploads/imagegs/profile_pic/_Soft pink 💗 _moon_ with dreamy word ✨️ _.jpeg" alt="Channel Logo">
                     <span class="channel_name_home">DTube Official</span>
                 </a>
                 <button class="subscribe_button">Subscribe</button>
@@ -46,5 +46,32 @@
         
     </div>
 
+
+    <script>
+        const email = localStorage.getItem("email");
+        const password = localStorage.getItem("password");
+        const videoPath = new URLSearchParams(window.location.search).get("videoPath");
+        const fetchUrl = "http://localhost:3000/video?videoPath=" + videoPath;
+        console.log(videoPath);
+            async function fetchVideoData(){
+                const response = await fetch(fetchUrl, {
+                    headers: {
+                        email,
+                        password
+                    }
+                });
+                const result = await response.json();
+                console.log(result);
+                const videoPath = document.getElementById("videoPath");
+                videoPath.src = result.path;
+                const videoTitle = document.getElementById("videoTitle");
+                videoTitle.innerText = result.title;
+                const videoDescription = document.getElementById("videoDescription");
+                videoDescription.innerText = result.description;
+                const video = document.querySelector(".video_player");
+                video.load();
+        }
+        fetchVideoData();
+    </script>
 </body>
 </html>

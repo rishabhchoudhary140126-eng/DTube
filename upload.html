@@ -40,7 +40,7 @@
                 <input
                     type="file"
                     id="videoInput"
-                    accept="video/*"
+                    accept="mp4"
                 >
 
             </div>
@@ -55,7 +55,7 @@
                 <input
                     type="file"
                     id="thumbnailInput"
-                    accept="image/*"
+                    accept= "jpg"
                 >
 
             </div>
@@ -89,7 +89,9 @@
 
     <script>
         const uploadButton = document.getElementById('upload_video_button');
-        uploadButton.addEventListener('click', async () => {
+        uploadButton.addEventListener('click', async (event) => {
+            event.preventDefault();
+
             const video = document.getElementById('videoInput').files[0];
             const thumbnail = document.getElementById('thumbnailInput').files[0];
             const title = document.getElementById('titleInput').value;
