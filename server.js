@@ -156,6 +156,14 @@ app.get("/videos", giveCurrentUser, function(req, res){
 });
 
 app.get("/video", giveCurrentUser, function(req, res){
+    const users = JSON.parse(fs.readFileSync("./data/users.json", "utf8"));
+    let channelName = " ";
+    for(let i=0; i<users.length; i++){
+        if(users[i].email === req.currentUser.email){
+            channelName = users[i].channelName;
+            break;
+        }
+    }
     const path = req.query.videoPath;
     console.log(path);
     const metadataPath = path.replaceAll(".mp4", ".json");
@@ -163,9 +171,47 @@ app.get("/video", giveCurrentUser, function(req, res){
     const ans = {
         path: path,
         title: metadata.title,
-        description: metadata.description
+        description: metadata.description,
+        channelName: channelName
     }
     console.log(ans);
     res.send(ans);
 });
+
+app.get("/metadata", giveCurrentUser, function(req, res){
+    let email = req.headers.email;
+    let upload_number = req.headers.upload_number;
+
+    email = email.replaceAll(".", "_").replaceAll("@", "_");
+
+    const metadata_path = "./uploads/" + email + "/" + upload_number +".json";
+    const metadata = JSON.parse(fs.readFileSync(metadata_path, "utf8"));
+    const title = metadata.title;
+    res.send({
+        metadata_path,
+        title
+    });
+});
+
+app.get("/profile", giveCurrentUser, function(req, res){
+    const users = JSON.parse(fs.readFileSync("./data/users.json", "utf8"));
+    let email = req.headers.email;
+    let password = req.headers.password;
+    let currentIndex = -1;
+    for(let i=0; i<users.length; i++){
+        if(users[i].email === email){
+            currentIndex = i;
+            break;
+        }
+    }
+    if(currentIndex === -1) res.send("No profile Pic found...");
+    email = users[currentIndex].email.replaceAll(".", "_").replaceAll("@", "_");
+    const ans = {
+        profile_pic_path: "/data/profile_pics/" + email + ".jpg",
+        channelName: users[currentIndex].channelName,
+        no_of_videos: users[currentIndex].uploadCount
+    };
+    res.send(ans);
+});
+
 app.listen(3000);

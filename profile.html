@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Channel</title>
+
+    <link rel="stylesheet" href="headerStyle.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo" id="header_logo">
+            <a href="/">
+                <img id="logo_img" src="uploads/imagegs/logo.png" alt="D-Tube Logo">
+            </a>
+        </div>
+
+        <div class="links">
+            <button class="upload_button" onclick="window.location.href='/upload.html'">
+                Upload
+            </button>
+
+            <button id="profile_button" onclick="window.location.href='/profile.html'">
+                <img id="profile_img" src="uploads/imagegs/profile.png" alt="Profile">
+            </button>
+        </div>
+    </div>
+
+    <div class="profile_container">
+
+        <div class="profile_info" id = "profile_info">
+            <img class="profile_picture" src="defaults/krish.png" alt="Profile">
+
+            <div class="channel_name">
+                <h1>D-Tube Official</h1>
+            </div>
+        </div>
+
+        <hr>
+        <br>
+
+        <div class="video_container" id = "video_container">
+
+            <div class="video">
+                <img class="thumbnail" src="defaults/krish.png" alt="">
+                <h3>First Video</h3>
+            </div>
+
+            <div class="video">
+                <img class="thumbnail" src="defaults/krish.png" alt="">
+                <h3>Second Video</h3>
+            </div>
+
+            <div class="video">
+                <img class="thumbnail" src="defaults/krish.png" alt="">
+                <h3>Third Video</h3>
+            </div>
+
+            <div class="video">
+                <img class="thumbnail" src="defaults/krish.png" alt="">
+                <h3>Fourth Video</h3>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+    <script>
+        const email = localStorage.getItem("email");
+        const password = localStorage.getItem("password");    
+
+
+        async function loadVideo(videoNumber){
+            const response = await fetch("http://localhost:3000/metadata", {
+                headers: {
+                    email,
+                    password,
+                    upload_number : videoNumber
+                }
+            });
+            const data = await response.json();
+            const json_path = data.metadata_path;
+            const thumbnail_path = json_path.replaceAll(".json", ".jpg");
+            const title = data.title;
+            console.log(json_path , thumbnail_path, title);
+            const ans = `
+                <div class = "video">
+                    <img class = "thumbnail" src = "${thumbnail_path}" alt="video number : ${videoNumber}">
+                    <h3> ${data.title} </h3>
+                </div>
+            `;
+            return ans;
+
+        }
+
+        async function loadProfile() {
+            const response = await fetch("http://localhost:3000/profile", {
+                headers: {
+                    email,
+                    password
+                }
+            });
+            console.log("awaiting response");
+            const profile = await response.json();
+            console.log("server responded");
+            console.log(profile);
+            const profile_info_html = document.getElementById("profile_info");
+            profile_info_html.innerHTML = "";
+            profile_info_html.innerHTML = `
+                <div class="profile_info" id = "profile_info">
+                    <img class="profile_picture" src="${profile.profile_pic_path}" alt="ProfileIMG">
+
+                    <div class="channel_name">
+                        <h1>${profile.channelName}</h1>
+                    </div>
+                </div>
+                `
+            const video_container = document.getElementById("video_container");
+            video_container.innerHTML = "";
+            for(let i = 1; i < profile.no_of_videos; i++){
+                let currentVideo = await loadVideo(i);
+                video_container.innerHTML = video_container.innerHTML + currentVideo;
+                
+            }
+            
+        }
+
+        loadProfile();
+
+    </script>
+
+
+</body>
+</html>

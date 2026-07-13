@@ -32,15 +32,15 @@
         </div>
         <div class="right_side">
             <h2 id = "videoTitle">Video Title-D-Tube urwwisuguryswuyirb8eyufhbuwyfbsuiyfheri fsi7uurf sruusi</h2>
-            <h4>Description: </h4>
-            <span id="videoDescription">This is a simple video description.</span>
             <div class="channel_info_watch">
                 <a href="/channel.html"  >
                     <img class="channel_logo" src="uploads/imagegs/profile_pic/_Soft pink 💗 _moon_ with dreamy word ✨️ _.jpeg" alt="Channel Logo">
-                    <span class="channel_name_home">DTube Official</span>
+                    <span class="channel_name_home" id="channel_name_home">DTube Official</span>
                 </a>
                 <button class="subscribe_button">Subscribe</button>
             </div>
+            <h4>Description: </h4>
+            <span id="videoDescription">This is a simple video description.</span>
         </div>
 
         
@@ -53,23 +53,25 @@
         const videoPath = new URLSearchParams(window.location.search).get("videoPath");
         const fetchUrl = "http://localhost:3000/video?videoPath=" + videoPath;
         console.log(videoPath);
-            async function fetchVideoData(){
-                const response = await fetch(fetchUrl, {
-                    headers: {
-                        email,
-                        password
-                    }
-                });
-                const result = await response.json();
-                console.log(result);
-                const videoPath = document.getElementById("videoPath");
-                videoPath.src = result.path;
-                const videoTitle = document.getElementById("videoTitle");
-                videoTitle.innerText = result.title;
-                const videoDescription = document.getElementById("videoDescription");
-                videoDescription.innerText = result.description;
-                const video = document.querySelector(".video_player");
-                video.load();
+        async function fetchVideoData(){
+            const response = await fetch(fetchUrl, {
+                headers: {
+                    email,
+                    password
+                }
+            });
+            const result = await response.json();
+            console.log(result);
+            const videoPath = document.getElementById("videoPath");
+            videoPath.src = result.path;
+            const videoTitle = document.getElementById("videoTitle");
+            videoTitle.innerText = result.title;
+            const videoDescription = document.getElementById("videoDescription");
+            videoDescription.innerText = result.description;
+            const channel_name_home = document.getElementById("channel_name_home");
+            channel_name_home.innerText = result.channelName;
+            const video = document.querySelector(".video_player");
+            video.load();
         }
         fetchVideoData();
     </script>
