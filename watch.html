@@ -34,7 +34,7 @@
             <h2 id = "videoTitle">Video Title-D-Tube urwwisuguryswuyirb8eyufhbuwyfbsuiyfheri fsi7uurf sruusi</h2>
             <div class="channel_info_watch">
                 <a href="/channel.html"  >
-                    <img class="channel_logo" src="uploads/imagegs/profile_pic/_Soft pink 💗 _moon_ with dreamy word ✨️ _.jpeg" alt="Channel Logo">
+                    <img class="channel_logo" id = "channel_logo" src="uploads/imagegs/profile_pic/_Soft pink 💗 _moon_ with dreamy word ✨️ _.jpeg" alt="Channel Logo">
                     <span class="channel_name_home" id="channel_name_home">DTube Official</span>
                 </a>
                 <button class="subscribe_button">Subscribe</button>
@@ -70,6 +70,8 @@
             videoDescription.innerText = result.description;
             const channel_name_home = document.getElementById("channel_name_home");
             channel_name_home.innerText = result.channelName;
+            const channel_logo = document.getElementById("channel_logo");
+            channel_logo.src = result.channelLogoPath;
             const video = document.querySelector(".video_player");
             video.load();
         }

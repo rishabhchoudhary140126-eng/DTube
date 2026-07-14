@@ -38,7 +38,7 @@ app.post("/signup", upload_profilePic.single("profile_pic"), function(req, res){
         channelName: req.body.channelName,
         uploadCount: 1
     }
-    
+    if(!curentUser.email.endsWith("@gmail.com")) return res.status(403).send("Only gmail address allowed!!!")
 
     const users = JSON.parse(fs.readFileSync("./data/users.json", "utf8"));
 
@@ -158,21 +158,27 @@ app.get("/videos", giveCurrentUser, function(req, res){
 app.get("/video", giveCurrentUser, function(req, res){
     const users = JSON.parse(fs.readFileSync("./data/users.json", "utf8"));
     let channelName = " ";
+    const path = req.query.videoPath;
+    const emailFolderName = path.split("/")[2];
+    const channelEmail = emailFolderName.replaceAll("_gmail_com", "@gmail.com");
+
     for(let i=0; i<users.length; i++){
-        if(users[i].email === req.currentUser.email){
+        if(users[i].email === channelEmail){
             channelName = users[i].channelName;
             break;
         }
     }
-    const path = req.query.videoPath;
+
     console.log(path);
     const metadataPath = path.replaceAll(".mp4", ".json");
     const metadata = JSON.parse(fs.readFileSync("." + metadataPath, "utf8"));
+    const channelLogoPath = "./data/profile_pics/" + emailFolderName + ".jpg";
     const ans = {
         path: path,
         title: metadata.title,
         description: metadata.description,
-        channelName: channelName
+        channelName: channelName,
+        channelLogoPath: channelLogoPath
     }
     console.log(ans);
     res.send(ans);
@@ -213,5 +219,7 @@ app.get("/profile", giveCurrentUser, function(req, res){
     };
     res.send(ans);
 });
+
+
 
 app.listen(3000);
