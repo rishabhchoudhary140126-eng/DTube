@@ -4,20 +4,28 @@
     "email": "rishabhchoudhary140126@gmail.com",
     "password": "feqw",
     "channelName": "fewq",
-    "uploadCount": 2
+    "uploadCount": 2,
+    "subscriber": 0,
+    "subscriptions": []
   },
   {
     "name": "Techy Guruji",
     "email": "techyguruji@gmail.com",
     "password": "techyguruji@gmail.com",
     "channelName": "Techy. Guruji",
-    "uploadCount": 6
+    "uploadCount": 6,
+    "subscriber": 0,
+    "subscriptions": []
   },
   {
     "name": "krish",
     "email": "krish@gmail.com",
     "password": "krish@123",
     "channelName": "Kriest",
-    "uploadCount": 4
+    "uploadCount": 4,
+    "subscriber": 1,
+    "subscriptions": [
+      "krish@gmail.com"
+    ]
   }
 ]

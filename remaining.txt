@@ -1,1 +1,1 @@
-add channel page.
+complete channel page, (its incomplete).

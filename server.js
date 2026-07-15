@@ -36,7 +36,9 @@ app.post("/signup", upload_profilePic.single("profile_pic"), function(req, res){
         email: req.body.email,
         password: req.body.password,
         channelName: req.body.channelName,
-        uploadCount: 1
+        uploadCount: 1,
+        subscriber: 0,
+        "subscriptions": []
     }
     if(!curentUser.email.endsWith("@gmail.com")) return res.status(403).send("Only gmail address allowed!!!")
 
@@ -215,7 +217,8 @@ app.get("/profile", giveCurrentUser, function(req, res){
     const ans = {
         profile_pic_path: "/data/profile_pics/" + email + ".jpg",
         channelName: users[currentIndex].channelName,
-        no_of_videos: users[currentIndex].uploadCount
+        no_of_videos: users[currentIndex].uploadCount,
+        subscribers: users[currentIndex].subscriber
     };
     res.send(ans);
 });
@@ -227,4 +230,27 @@ app.get("/profile_pic", giveCurrentUser, function(req, res){
     res.send({profilePath});
 });
 
+app.post("/userSubscribed", giveCurrentUser, function(req, res){
+    const users = JSON.parse(fs.readFileSync("./data/users.json", "utf8"));
+    const videoPath = req.query.videoPath;
+    const emailFolderName = videoPath.split("/")[2];
+    const channelEmail = emailFolderName.replaceAll("_gmail_com", "@gmail.com");
+
+    for(let i=0; i<users.length; i++){
+        if(users[i].email === channelEmail){
+            
+            for(let j = 0; j<users[i].subscriptions.length; j++){
+                if(users[i].subscriptions[j] == req.headers.email) return res.status(200).send("Already Subscribed!");
+            }
+            
+            users[i].subscriber++;
+            console.log(users[i].subscriber);
+            users[i].subscriptions.push(req.headers.email);
+            break;
+        }
+    }
+    console.log("One user subscribed!!");
+    fs.writeFileSync("./data/users.json", JSON.stringify(users, null, 2));
+    res.status(200).send("Subscribed!");
+});
 app.listen(3000);

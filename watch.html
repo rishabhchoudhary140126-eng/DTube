@@ -37,7 +37,7 @@
                     <img class="channel_logo" id = "channel_logo" src="uploads/imagegs/profile_pic/_Soft pink 💗 _moon_ with dreamy word ✨️ _.jpeg" alt="Channel Logo">
                     <span class="channel_name_home" id="channel_name_home">DTube Official</span>
                 </a>
-                <button class="subscribe_button">Subscribe</button>
+                <button class="subscribe_button" id="subscribe_button">Subscribe</button>
             </div>
             <h4>Description: </h4>
             <span id="videoDescription">This is a simple video description.</span>
@@ -96,6 +96,21 @@
             video.load();
         }
         fetchVideoData();
+
+        const subscribe_button = document.getElementById("subscribe_button");
+        subscribe_button.addEventListener("click", async function (){
+            const videoPath = new URLSearchParams(window.location.search).get("videoPath");
+            const fetchUrl = "http://localhost:3000/userSubscribed?videoPath=" + videoPath;
+            const hitSubscribe = await fetch(fetchUrl, {
+                method: "POST",
+                headers : {
+                    email: localStorage.getItem("email"), 
+                    password: localStorage.getItem("password")
+                }
+            });
+            const message = await hitSubscribe.text();
+            if(hitSubscribe.ok) subscribe_button.innerText = "Subscribed"
+        });
     </script>
 </body>
 </html>
