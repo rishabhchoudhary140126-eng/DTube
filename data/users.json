@@ -5,8 +5,10 @@
     "password": "feqw",
     "channelName": "fewq",
     "uploadCount": 2,
-    "subscriber": 0,
-    "subscriptions": []
+    "subscriber": 1,
+    "subscriptions": [
+      "krish@gmail.com"
+    ]
   },
   {
     "name": "Techy Guruji",
@@ -14,8 +16,10 @@
     "password": "techyguruji@gmail.com",
     "channelName": "Techy. Guruji",
     "uploadCount": 6,
-    "subscriber": 0,
-    "subscriptions": []
+    "subscriber": 1,
+    "subscriptions": [
+      "techyguruji@gmail.com"
+    ]
   },
   {
     "name": "krish",

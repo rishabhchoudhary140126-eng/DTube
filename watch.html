@@ -32,6 +32,9 @@
         </div>
         <div class="right_side">
             <h2 id = "videoTitle">Video Title-D-Tube urwwisuguryswuyirb8eyufhbuwyfbsuiyfheri fsi7uurf sruusi</h2>
+            <div class="video_meta"style="font-size: 11px;">
+                <span id="viewCount"><span class="viewCount" id="viewCountSpan">0</span> views</span>
+            </div>
             <div class="channel_info_watch">
                 <a href="/channel.html"  >
                     <img class="channel_logo" id = "channel_logo" src="uploads/imagegs/profile_pic/_Soft pink 💗 _moon_ with dreamy word ✨️ _.jpeg" alt="Channel Logo">
@@ -48,6 +51,7 @@
 
 
     <script>
+        const viewCount = document.getElementById("viewCount");
 
         async function loadProfilePic(){
             const email = localStorage.getItem("email");
@@ -111,6 +115,23 @@
             const message = await hitSubscribe.text();
             if(hitSubscribe.ok) subscribe_button.innerText = "Subscribed"
         });
+
+        async function viewSync(){
+            const viewCountSpan = document.getElementById("viewCountSpan");
+            const videoPath = new URLSearchParams(window.location.search).get("videoPath");
+            const fetchUrl = "http://localhost:3000/viewCount?videoPath=" + videoPath;
+            const response = await fetch(fetchUrl, {
+                method : "GET",
+                headers: {
+                    email: localStorage.getItem("email"),
+                    password: localStorage.getItem("password")
+                }
+            })
+            const views = await response.text();
+            viewCountSpan.innerText = views;
+
+        }
+        viewSync();
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@ const app = express();
 app.use(express.json());
 const cors = require('cors'); 
 app.use(cors());
-
+app.use(express.static(__dirname));
 const fs = require("fs");
 const multer = require("multer");
 const path = require("path");
@@ -252,5 +252,14 @@ app.post("/userSubscribed", giveCurrentUser, function(req, res){
     console.log("One user subscribed!!");
     fs.writeFileSync("./data/users.json", JSON.stringify(users, null, 2));
     res.status(200).send("Subscribed!");
+});
+app.get("/viewCount", giveCurrentUser, function(req, res){
+    let videoPath = req.query.videoPath;
+    videoPath = "." + videoPath.replaceAll(".mp4", ".json");
+    console.log(videoPath);
+    const videoMeta = JSON.parse(fs.readFileSync(videoPath , "utf8"));
+    videoMeta.views++;
+    fs.writeFileSync(videoPath, JSON.stringify(videoMeta, null, 2));
+    res.send(videoMeta.views);
 });
 app.listen(3000);
