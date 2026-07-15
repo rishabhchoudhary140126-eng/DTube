@@ -12,14 +12,14 @@
     <div class = "header">
         <div class = "logo" id = "header_logo">
             <a href="/">
-                <img id = "logo_img" src="/uploads/imagegs/logo.png" alt="D-Tube Logo">
+                <img id = "logo_img" src="/defaults/logo.png" alt="D-Tube Logo">
             </a>
         </div>
         <div class = "links">
             
             <button class = "upload_button" onclick="window.location.href='/upload.html'" id = "upload_button">Upload</button>
             
-            <button id="profile_button" onclick="window.location.href='/channel.html'"> <img id="profile_img" src="imagegs/profile.png" alt="Profile"> </button>
+            <button id="profile_button" onclick="window.location.href='/profile.html'"> <img id="profile_img" src="imagegs/profile.png" alt="Profile"> </button>
         </div>    
     </div>
 
@@ -63,6 +63,23 @@
     </div>
 
     <script>
+        async function loadProfilePic(){
+            const email = localStorage.getItem("email");
+            const password = localStorage.getItem("password");
+            const response = await fetch("http://localhost:3000/profile_pic", {
+                headers : {
+                    email,
+                    password
+                }
+            });
+            console.log(response);
+            const path = await response.json();
+            console.log(path.profilePath);
+            const profile_img = document.getElementById("profile_img");
+            profile_img.src = path.profilePath;
+
+        }
+        loadProfilePic();
         
     </script>
     

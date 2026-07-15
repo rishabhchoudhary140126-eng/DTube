@@ -9,9 +9,38 @@
 
 <body>
 
+    <script>
+        const email = localStorage.getItem("email");
+        const password = localStorage.getItem("password");
+
+        async function loginCheck() {
+            const profile = await fetch("http://localhost:3000/profile", {
+                headers: {
+                    email,
+                    password
+                }
+            })
+            if(profile.ok){
+                window.location.replace("/home.html");
+                return;
+            }
+            else {
+                localStorage.removeItem("email");
+                localStorage.removeItem("password");
+                alert("Please login/signup");
+            }
+
+        }
+        loginCheck();
+    </script>
+
+
+
+
+
     <div class="header">
         <div class="logo" id="header_logo">
-            <img id="logo_img" src="/uploads/imagegs/logo.png" alt="D-Tube Logo">
+            <img id="logo_img" src="/defaults/logo.png" alt="D-Tube Logo">
         </div>
 
         <div class="links">
@@ -20,7 +49,7 @@
             </button>
 
             <button id="profile_button" onclick="window.location.href='/profile.html'">
-                <img id="profile_img" src="imagegs/profile.png" alt="Profile">
+                <img id="profile_img" src="/defaults/logo.png" alt="Profile">
             </button>
         </div>
     </div>
@@ -42,5 +71,8 @@
 
     </section>
 
+    <script>
+
+    </script>
 </body>
 </html>

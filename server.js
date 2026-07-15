@@ -74,7 +74,7 @@ function giveCurrentUser(req, res, next){
             else return res.send("Invalid password, Please login again");
         }
     }
-    return res.send("User not found, Please Signup");
+    return res.status(404).send("User not found, Please Signup");
 }
 
 
@@ -158,8 +158,8 @@ app.get("/videos", giveCurrentUser, function(req, res){
 app.get("/video", giveCurrentUser, function(req, res){
     const users = JSON.parse(fs.readFileSync("./data/users.json", "utf8"));
     let channelName = " ";
-    const path = req.query.videoPath;
-    const emailFolderName = path.split("/")[2];
+    const videoPath = req.query.videoPath;
+    const emailFolderName = videoPath.split("/")[2];
     const channelEmail = emailFolderName.replaceAll("_gmail_com", "@gmail.com");
 
     for(let i=0; i<users.length; i++){
@@ -169,12 +169,12 @@ app.get("/video", giveCurrentUser, function(req, res){
         }
     }
 
-    console.log(path);
-    const metadataPath = path.replaceAll(".mp4", ".json");
+    console.log(videoPath);
+    const metadataPath = videoPath.replaceAll(".mp4", ".json");
     const metadata = JSON.parse(fs.readFileSync("." + metadataPath, "utf8"));
     const channelLogoPath = "./data/profile_pics/" + emailFolderName + ".jpg";
     const ans = {
-        path: path,
+        path: videoPath,
         title: metadata.title,
         description: metadata.description,
         channelName: channelName,
@@ -210,7 +210,7 @@ app.get("/profile", giveCurrentUser, function(req, res){
             break;
         }
     }
-    if(currentIndex === -1) res.send("No profile Pic found...");
+    if(currentIndex === -1) return res.send("No profile Pic found...");
     email = users[currentIndex].email.replaceAll(".", "_").replaceAll("@", "_");
     const ans = {
         profile_pic_path: "/data/profile_pics/" + email + ".jpg",
@@ -220,6 +220,11 @@ app.get("/profile", giveCurrentUser, function(req, res){
     res.send(ans);
 });
 
-
+app.get("/profile_pic", giveCurrentUser, function(req, res){
+    let email = req.headers.email;
+    email = email.replaceAll("@", "_").replaceAll(".", "_");
+    const profilePath = "/data/profile_pics/" + email + ".jpg";
+    res.send({profilePath});
+});
 
 app.listen(3000);
