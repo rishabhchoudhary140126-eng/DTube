@@ -26,9 +26,9 @@
     <div class="profile_container">
 
         <div class="profile_info" id = "profile_info">
-            <img class="profile_picture" src="defaults/krish.png" alt="Profile">
+            <img class="profile_picture" id = "profile_pic_image" src="defaults/logo.png" alt="Profile">
 
-            <div class="channel_name">
+            <div class="channel_name", id="channel_name">
                 <h1>D-Tube Official</h1>
             </div>
         </div>
@@ -38,25 +38,6 @@
 
         <div class="video_container" id = "video_container">
 
-            <div class="video">
-                <img class="thumbnail" src="defaults/krish.png" alt="">
-                <h3>First Video</h3>
-            </div>
-
-            <div class="video">
-                <img class="thumbnail" src="defaults/krish.png" alt="">
-                <h3>Second Video</h3>
-            </div>
-
-            <div class="video">
-                <img class="thumbnail" src="defaults/krish.png" alt="">
-                <h3>Third Video</h3>
-            </div>
-
-            <div class="video">
-                <img class="thumbnail" src="defaults/krish.png" alt="">
-                <h3>Fourth Video</h3>
-            </div>
 
         </div>
 
@@ -80,7 +61,38 @@
 
         }
         loadProfilePic();
-        
+
+        async function channelLoader(){
+            const channelEmail = new URLSearchParams(window.location.search).get("channelEmail");
+            const fetchURL = "http://localhost:3000/channelPage?channelEmail=" + channelEmail;
+            const response = await fetch(fetchURL, {
+                headers: {
+                    email: localStorage.getItem("email"),
+                    password: localStorage.getItem("password")
+                }
+            });
+            const channelData = await response.json();
+            const profile_pic_image = document.getElementById("profile_pic_image");
+            profile_pic_image.src = channelData.profile_pic_path;
+            const channel_name = document.getElementById("channel_name");
+            channel_name.innerHTML = `<h1>${channelData.channelName}</h1>`;
+            console.log(channelData.channelName);
+
+            const video_container = document.getElementById("video_container");
+            video_container.innerHTML = "";
+            for(let i=0; i<channelData.videos.length; i++){
+                video_container.innerHTML = video_container.innerHTML + `
+                <a href = "/watch.html?videoPath=${channelData.videos[i].videoPath}">
+                    <div class="video">
+                        <img class="thumbnail" src="${channelData.videos[i].thumbnailPath}" alt="D-tube title">
+                        <h3>${channelData.videos[i].title}</h3>
+                    </div>
+                </a>
+                `;
+            }
+            
+        }
+        channelLoader();
     </script>
     
 </body>

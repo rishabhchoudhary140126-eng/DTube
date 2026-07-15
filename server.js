@@ -113,7 +113,8 @@ app.post("/upload", giveCurrentUser, upload_upload.fields([{ name : "video", max
 
      const metaData = {
         title: title,
-        description : description
+        description : description,
+        views: 0
      }
 
     const user = req.currentUser.email.replaceAll(".", "_").replaceAll("@", "_");
@@ -260,6 +261,42 @@ app.get("/viewCount", giveCurrentUser, function(req, res){
     const videoMeta = JSON.parse(fs.readFileSync(videoPath , "utf8"));
     videoMeta.views++;
     fs.writeFileSync(videoPath, JSON.stringify(videoMeta, null, 2));
-    res.send(videoMeta.views);
+    res.send(videoMeta.views); 
+});
+
+app.get("/channelPage", giveCurrentUser, function(req, res){
+    const channelEmail = req.query.channelEmail;
+    console.log(channelEmail);
+    const channelPath = channelEmail.replaceAll(".", "_").replaceAll("@", "_");
+    console.log(channelPath);
+    let currentIndex = -1;
+    const users = JSON.parse(fs.readFileSync("./data/users.json", "utf8"));
+    for(let i=0; i<users.length; i++){
+        if(users[i].email == channelEmail){
+            currentIndex = i;
+            break;
+        }
+    }
+    const profile_pic_path = "./data/profile_pics/" + channelEmail.replaceAll(".", "_").replaceAll("@", "_") + ".jpg";
+    const channelName = users[currentIndex].channelName;
+
+
+    const numberOfUploads = users[currentIndex].uploadCount;
+    let videos = [];
+    for(let i = 1; i<numberOfUploads; i++){
+        const videoMeta = JSON.parse(fs.readFileSync(`./uploads/${channelPath}/${i}.json`, "utf8"));
+        videos.push({
+            title: videoMeta.title,
+            thumbnailPath : `./uploads/${channelPath}/${i}.jpg`,
+            videoPath : `/uploads/${channelPath}/${i}.mp4`
+            
+        })
+    }
+    const ans ={
+        profile_pic_path,
+        channelName,
+        videos
+    }
+    res.send(ans);
 });
 app.listen(3000);

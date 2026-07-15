@@ -19,7 +19,7 @@
             
             <button class = "upload_button" onclick="window.location.href='/upload.html'" id = "upload_button">Upload</button>
             
-            <button id="profile_button" onclick="window.location.href='/profile.html'"> <img id="profile_img" src="uploads/imagegs/profile.png" alt="Profile"> </button>
+            <button id="profile_button" onclick="window.location.href='/profile.html'"> <img id="profile_img" src="defaults/logo.png" alt="Profile"> </button>
         </div>    
     </div>
 
@@ -36,8 +36,8 @@
                 <span id="viewCount"><span class="viewCount" id="viewCountSpan">0</span> views</span>
             </div>
             <div class="channel_info_watch">
-                <a href="/channel.html"  >
-                    <img class="channel_logo" id = "channel_logo" src="uploads/imagegs/profile_pic/_Soft pink 💗 _moon_ with dreamy word ✨️ _.jpeg" alt="Channel Logo">
+                <a href="/channel.html" id = "openChannelButton" >
+                    <img class="channel_logo" id = "channel_logo" src="defaults/logo.png" alt="Channel Logo">
                     <span class="channel_name_home" id="channel_name_home">DTube Official</span>
                 </a>
                 <button class="subscribe_button" id="subscribe_button">Subscribe</button>
@@ -62,9 +62,7 @@
                     password
                 }
             });
-            console.log(response);
             const path = await response.json();
-            console.log(path.profilePath);
             const profile_img = document.getElementById("profile_img");
             profile_img.src = path.profilePath;
 
@@ -76,7 +74,6 @@
         const password = localStorage.getItem("password");
         const videoPath = new URLSearchParams(window.location.search).get("videoPath");
         const fetchUrl = "http://localhost:3000/video?videoPath=" + videoPath;
-        console.log(videoPath);
         async function fetchVideoData(){
             const response = await fetch(fetchUrl, {
                 headers: {
@@ -85,7 +82,6 @@
                 }
             });
             const result = await response.json();
-            console.log(result);
             const videoPath = document.getElementById("videoPath");
             videoPath.src = result.path;
             const videoTitle = document.getElementById("videoTitle");
@@ -132,6 +128,17 @@
 
         }
         viewSync();
+
+
+
+
+
+
+        const openChannelButton = document.getElementById("openChannelButton");
+        const emailFolderName = videoPath.split("/")[2];
+        const channelEmail = emailFolderName.replaceAll("_gmail_com", "@gmail.com");
+        console.log(channelEmail);
+        openChannelButton.href = `/channel.html?channelEmail=${channelEmail}`;
     </script>
 </body>
 </html>
