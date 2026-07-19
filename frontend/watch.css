@@ -55,3 +55,17 @@
     border-radius: 4px;
     cursor: pointer;
 }
+
+.like_section{
+    margin: 12px 0;
+}
+
+#likeButton{
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+#likeCount{
+    margin-left: 10px;
+    font-size: 14px;
+}

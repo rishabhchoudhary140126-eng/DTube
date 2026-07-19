@@ -18,7 +18,7 @@
         <div class = "links">
             
             <button class = "upload_button" onclick="window.location.href='/upload.html'" id = "upload_button">Upload</button>
-            
+            <button class="upload_button" onclick="logout()" id="logout_button">Logout</button>
             <button id="profile_button" onclick="window.location.href='/profile.html'"> <img id="profile_img" src="defaults/logo.png" alt="Profile"> </button>
         </div>    
     </div>
@@ -34,6 +34,10 @@
             <h2 id = "videoTitle">Video Title-D-Tube urwwisuguryswuyirb8eyufhbuwyfbsuiyfheri fsi7uurf sruusi</h2>
             <div class="video_meta"style="font-size: 11px;">
                 <span id="viewCount"><span class="viewCount" id="viewCountSpan">0</span> views</span>
+            </div>
+            <div class="like_section">
+                <button id="likeButton">👍 Like</button>
+                <span id="likeCount">0 Likes</span>
             </div>
             <div class="channel_info_watch">
                 <a href="/channel.html" id = "openChannelButton" >
@@ -51,6 +55,15 @@
 
 
     <script>
+        function logout(){
+            localStorage.clear();
+            window.location.href = "/";
+        }
+
+
+
+        
+
         const viewCount = document.getElementById("viewCount");
 
         async function loadProfilePic(){
@@ -68,7 +81,7 @@
 
         }
         loadProfilePic();
-        
+        console.log("Profile load completed");
 
         const email = localStorage.getItem("email");
         const password = localStorage.getItem("password");
@@ -139,6 +152,55 @@
         const channelEmail = emailFolderName.replaceAll("_gmail_com", "@gmail.com");
         console.log(channelEmail);
         openChannelButton.href = `/channel.html?channelEmail=${channelEmail}`;
+
+
+
+
+        const likeButton = document.getElementById("likeButton");
+        const likeCount = document.getElementById("likeCount");
+
+        async function checkLike(){
+            let isLiked = false;
+            const videoPath = new URLSearchParams(window.location.search).get("videoPath");
+            const fetchUrl = "http://localhost:3000/checkIfLiked?videoPath=" + videoPath;
+            const response = await fetch(fetchUrl , {
+                headers :{
+                    email : localStorage.getItem("email"),
+                    password : localStorage.getItem("password")
+                }
+            })
+            const msg = await response.json();
+            if(msg){
+                isLiked = true;
+            }
+
+            if(msg.isLiked){
+                likeButton.style.backgroundColor = "aquamarine";
+            }
+            likeCount.innerText = `${msg.likes} Likes`;
+
+        }
+        checkLike();
+
+
+        async function likeVideo(){
+            const videoPath = new URLSearchParams(window.location.search).get("videoPath");
+            const fetchUrl = "http://localhost:3000/likeVideo?videoPath=" + videoPath;
+            const response = await fetch(fetchUrl , {
+                method : "POST",
+                headers :{
+                    email : localStorage.getItem("email"),
+                    password : localStorage.getItem("password")
+                }
+            })
+
+            const msg = await response.json();
+            if(msg.isLiked){
+                likeButton.style.backgroundColor = "aquamarine";
+            }
+            likeCount.innerText = `${msg.likes} Likes`;
+        }
+        document.addEventListener("click", likeVideo);
     </script>
 </body>
 </html>

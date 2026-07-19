@@ -18,7 +18,7 @@
         <div class = "links">
             
             <button class = "upload_button" onclick="window.location.href='/upload.html'" id = "upload_button">Upload</button>
-            
+            <button class="upload_button" onclick="logout()" id="logout_button">Logout</button>
             <button id="profile_button" onclick="window.location.href='/profile.html'"> <img id="profile_img" src="uploads/imagegs/profile.png" alt="Profile"> </button>
         </div>    
     </div>
@@ -88,6 +88,14 @@
 
 
     <script>
+        function logout(){
+            localStorage.clear();
+            window.location.href = "/";
+        }
+
+
+
+        
 
         async function loadProfilePic(){
             const email = localStorage.getItem("email");

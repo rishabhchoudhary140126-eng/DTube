@@ -27,9 +27,10 @@
     "password": "krish@123",
     "channelName": "Kriest",
     "uploadCount": 4,
-    "subscriber": 1,
+    "subscriber": 2,
     "subscriptions": [
-      "krish@gmail.com"
+      "krish@gmail.com",
+      "techyguruji@gmail.com"
     ]
   }
 ]

@@ -203,8 +203,9 @@ app.get("/metadata", giveCurrentUser, function(req, res){
     const metadata_path = path.join(__dirname, "uploads", email, upload_number);
     const metadata = JSON.parse(fs.readFileSync(metadata_path, "utf8"));
     const title = metadata.title;
+    let metaForHtml = "/uploads/" + email + "/" + upload_number;
     res.send({
-        metadata_path,
+        metadata_path : metaForHtml,
         title
     });
 });
@@ -222,8 +223,9 @@ app.get("/profile", giveCurrentUser, function(req, res){
     }
     if(currentIndex === -1) return res.send("No profile Pic found...");
     email = users[currentIndex].email.replaceAll(".", "_").replaceAll("@", "_");
+    let emailAsPath = email + ".jpg";
     const ans = {
-        profile_pic_path: "/data/profile_pics/" + email + ".jpg",
+        profile_pic_path: "/data/profile_pics/" + emailAsPath,
         channelName: users[currentIndex].channelName,
         no_of_videos: users[currentIndex].uploadCount,
         subscribers: users[currentIndex].subscriber
@@ -306,4 +308,63 @@ app.get("/channelPage", giveCurrentUser, function(req, res){
     }
     res.send(ans);
 });
+
+app.post("/likeVideo", giveCurrentUser, function(req, res){
+    let videoPath = req.query.videoPath;
+    let metadataPath = path.join(__dirname, videoPath.replaceAll(".mp4", ".json"));
+    console.log(videoPath);
+    console.log(metadataPath);
+    const videoMeta = JSON.parse(fs.readFileSync(metadataPath, "utf-8"));
+    console.log(videoMeta);
+    let likesArray = videoMeta.likedBy;
+    console.log(likesArray);
+    const currentUser = req.headers.email;
+    let alreadyLiked = false;
+    for(let i=0; i<likesArray.length; i++){
+        if(currentUser == likesArray[i]){
+            alreadyLiked = true;
+            break;
+        }
+    }
+    if(alreadyLiked)return res.send({
+        isLiked: true,
+        likes: likesArray.length
+    });
+
+    likesArray.push(currentUser);
+    console.log("METAData path is: ", metadataPath);
+    fs.writeFileSync(metadataPath, JSON.stringify(videoMeta, null, 2));
+    return res.status(200).send({
+        isLiked: true,
+        likes: likesArray.length
+    });
+});
+
+app.get("/checkIfLiked", giveCurrentUser, function(req, res){
+    let videoPath = req.query.videoPath;
+    let metadataPath = path.join(__dirname, videoPath.replaceAll(".mp4", ".json"));
+    console.log(videoPath);
+    const videoMeta = JSON.parse(fs.readFileSync(metadataPath, "utf-8"));
+    console.log(videoMeta);
+    let likesArray = videoMeta.likedBy;
+    const currentUser = req.headers.email;
+    let alreadyLiked = false;
+    for(let i=0; i<likesArray.length; i++){
+        if(currentUser == likesArray[i]){
+            console.log("liked or nottttttttt: ", likesArray[i]);
+            alreadyLiked = true;
+            break;
+        }
+    }
+    if(alreadyLiked)return res.send({
+        isLiked: true,
+        likes: likesArray.length
+    });
+    else return res.send({
+        isLiked: false,
+        likes: likesArray.length
+    });
+
+});
+
 app.listen(3000);
